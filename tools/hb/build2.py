@@ -11,6 +11,9 @@ import re
 import sys
 import csv
 import shutil
+from urllib.parse import quote
+
+REPO_URL = 'https://github.com/nullurl/pet-handbook'
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -409,6 +412,23 @@ def build_one(mod, kind, out_path, img_mode, img_prefix, diffs, nfig):
     meta.update(META_FIX[kind])
     front = front_cat(nfig) if kind == 'cat' else front_dog(nfig)
 
+    # 仅 GitHub 版（图片外链）挂出外部入口：自包含的单文件版保持零依赖、零外链
+    if img_mode == 'external':
+        if kind == 'cat':
+            meta['links'] = [
+                ('另：养狗手册（2026 版）', 'dog.html'),
+                ('下载单文件离线版（图片内联，可离线打开）',
+                 '单文件离线版/' + quote('养猫手册-2026增订版.html'), ' download'),
+                ('GitHub 仓库 · 勘误与反馈', REPO_URL),
+            ]
+        else:
+            meta['links'] = [
+                ('另：养猫手册（2026 增订版）', './'),
+                ('下载单文件离线版（图片内联，可离线打开）',
+                 '单文件离线版/' + quote('养狗手册-2026版.html'), ' download'),
+                ('GitHub 仓库 · 勘误与反馈', REPO_URL),
+            ]
+
     chapters = [(c['no'], c['title']) for s in mod.SECTIONS for c in s['chapters']]
 
     # 预渲染，收集每章实际命中哪些来源编号
@@ -435,6 +455,15 @@ def build_one(mod, kind, out_path, img_mode, img_prefix, diffs, nfig):
     print(f'  {os.path.basename(out_path):34} {len(html)/1048576:6.2f} MB  '
           f'配图 {nfig}  差异表 {len(diffs)}  章 {len(chapters)}')
     return html
+
+
+def build_repo_pages():
+    """只生成 GitHub 版（图片外链）页面，供 mkrepo.py 在目录就绪后调用。"""
+    prep = {k: transform(m, k) for m, k in ((MOD_CAT, 'cat'), (MOD_DOG, 'dog'))}
+    build_one(MOD_CAT, 'cat', os.path.join(OUT_REPO, 'docs', 'index.html'),
+              'external', 'assets', *prep['cat'])
+    build_one(MOD_DOG, 'dog', os.path.join(OUT_REPO, 'docs', 'dog.html'),
+              'external', 'assets', *prep['dog'])
 
 
 def main():

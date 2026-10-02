@@ -88,6 +88,10 @@ aside a{display:block; padding:5px 22px; color:var(--ink2); text-decoration:none
 aside a:hover{background:var(--bg3); color:var(--brand)}
 aside a.sec{font-weight:700; color:var(--ink); margin-top:10px; font-size:13px; padding-top:9px; border-top:1px solid var(--line2)}
 aside a.sec:hover{border-left-color:var(--brand)}
+aside .nav-extra{padding:0 22px 14px; border-bottom:1px solid var(--line2); margin-bottom:8px}
+aside .nav-extra a{display:block; padding:3px 0; border-left:0; color:var(--brand);
+  font-size:12.5px; text-decoration:none; line-height:1.6}
+aside .nav-extra a:hover{background:none; text-decoration:underline}
 aside a.ch{padding-left:34px; font-size:13px; color:var(--ink3)}
 aside a.ch:hover{color:var(--brand)}
 /* ---------- 正文 ---------- */
@@ -105,6 +109,12 @@ header.hero .meta{margin-top:24px; display:flex; flex-wrap:wrap; gap:10px}
 header.hero .meta span{
   background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18);
   padding:5px 12px; border-radius:20px; font-size:12.5px; color:#f0e6e4}
+header.hero .links{margin-top:16px; display:flex; flex-wrap:wrap; gap:9px}
+header.hero .links a{
+  display:inline-block; padding:7px 15px; border-radius:20px; text-decoration:none;
+  border:1px solid rgba(255,255,255,.34); background:rgba(255,255,255,.09);
+  color:#fff; font-size:13px; line-height:1.4}
+header.hero .links a:hover{background:rgba(255,255,255,.22); border-color:rgba(255,255,255,.6)}
 header.hero .hero-inner{display:flex; gap:34px; align-items:center; position:relative; z-index:2}
 header.hero .hero-txt{flex:1 1 auto; min-width:0}
 header.hero .hero-art{flex:0 0 330px; border-radius:16px; overflow:hidden;
@@ -394,9 +404,21 @@ def _table(head, rows, cls):
     return t + '</tbody></table>'
 
 
+def _links(items):
+    """(label, url[, attrs]) → 链接串；外部链接自动补 target/rel。"""
+    out = []
+    for it in items:
+        t, u = it[0], it[1]
+        extra = it[2] if len(it) > 2 else (' target="_blank" rel="noopener"' if u.startswith('http') else '')
+        out.append(f'<a href="{esc(u)}"{extra}>{esc(t)}</a>')
+    return ''.join(out)
+
+
 def build(meta, sections, front_extra, appendices, slug):
     # 侧边栏
     sb = ['<div class="brand"><b>%s</b><span>%s</span></div>' % (esc(meta['title']), esc(meta['version']))]
+    if meta.get('links'):
+        sb.append('<div class="nav-extra">' + _links(meta['links']) + '</div>')
     sb.append('<a href="#top">封面与使用说明</a>')
     for si, sec in enumerate(sections):
         sb.append(f'<a class="sec" href="#sec{si}">{esc(sec["name"])}</a>')
@@ -421,6 +443,8 @@ def build(meta, sections, front_extra, appendices, slug):
     body.append(f'<h1>{esc(meta["title"])}</h1>')
     body.append(f'<div class="sub">{esc(meta["subtitle"])}</div>')
     body.append('<div class="meta">' + ''.join(f'<span>{esc(x)}</span>' for x in meta['meta']) + '</div>')
+    if meta.get('links'):
+        body.append('<div class="links">' + _links(meta['links']) + '</div>')
     body.append('</div>')
     if meta.get('hero'):
         body.append(f'<div class="hero-art"><img src="{img_uri(meta["hero"])}" alt="封面插图"></div>')

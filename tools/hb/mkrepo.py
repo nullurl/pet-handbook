@@ -76,8 +76,10 @@ README = f'''# 宠物饲养手册（2026）
 `docs/单文件离线版/` 下是两份**把图片内联进去**的单文件 HTML（各约 4 MB），
 不依赖任何外部资源，可直接下载、打印、发给朋友：
 
-- `养猫手册-2026增订版.html`
-- `养狗手册-2026版.html`
+- [养猫手册-2026增订版.html]({PAGES}/单文件离线版/养猫手册-2026增订版.html)（4.8 MB）
+- [养狗手册-2026版.html]({PAGES}/单文件离线版/养狗手册-2026版.html)（4.1 MB）
+
+也可以从仓库里直接下载原始文件，或用 `curl -O` 抓取上面的直链。
 
 ## 内容结构
 
@@ -235,9 +237,17 @@ GITATTR = '''* text=auto eol=lf
 
 
 def main():
+    # 清理上次产物，但**绝不动 .git**（否则会把本地仓库连同未推送的提交一起删掉）
     if os.path.isdir(REPO):
-        shutil.rmtree(REPO)
-    os.makedirs(REPO)
+        for name in os.listdir(REPO):
+            if name == '.git':
+                continue
+            p = os.path.join(REPO, name)
+            if os.path.isdir(p):
+                shutil.rmtree(p)
+            else:
+                os.remove(p)
+    os.makedirs(REPO, exist_ok=True)
 
     # 1) 图片
     imgs = used_images()
@@ -288,7 +298,14 @@ def main():
     write(os.path.join(REPO, 'LICENSE'), LICENSE)
     write(os.path.join(REPO, '.gitignore'), GITIGNORE)
     write(os.path.join(REPO, '.gitattributes'), GITATTR)
-    print('  README / LICENSE / .gitignore / .gitattributes')
+    write(os.path.join(REPO, 'docs', '.nojekyll'), '')
+    print('  README / LICENSE / .gitignore / .gitattributes / docs/.nojekyll')
+
+    # 6) 线上页：必须在 assets/ 与单文件离线版就绪之后再生成
+    #    （build2 的外链版依赖这里的目录结构，所以由本脚本收尾，避免顺序踩坑）
+    import build2
+    print('◇ GitHub 版页面（图片外链）')
+    build2.build_repo_pages()
 
 
 if __name__ == '__main__':

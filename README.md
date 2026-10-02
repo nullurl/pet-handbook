@@ -18,8 +18,10 @@
 `docs/单文件离线版/` 下是两份**把图片内联进去**的单文件 HTML（各约 4 MB），
 不依赖任何外部资源，可直接下载、打印、发给朋友：
 
-- `养猫手册-2026增订版.html`
-- `养狗手册-2026版.html`
+- [养猫手册-2026增订版.html](https://nullurl.github.io/pet-handbook/单文件离线版/养猫手册-2026增订版.html)（4.8 MB）
+- [养狗手册-2026版.html](https://nullurl.github.io/pet-handbook/单文件离线版/养狗手册-2026版.html)（4.1 MB）
+
+也可以从仓库里直接下载原始文件，或用 `curl -O` 抓取上面的直链。
 
 ## 内容结构
 

@@ -353,7 +353,7 @@ footer a{{color:var(--ink3)}}
 <footer>宠物饲养手册 2026 ·
   <a href="index.html">养猫手册</a> ·
   <a href="dog.html">养狗手册</a> ·
-  <a href="单文件离线版/">PDF 与单文件版</a></footer>
+  <a href="https://github.com/nullurl/pet-handbook/tree/main/docs/单文件离线版">PDF 与单文件版</a></footer>
 </body></html>'''
     with io.open(out_path, 'w', encoding='utf-8') as f:
         f.write(html)

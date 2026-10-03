@@ -13,15 +13,24 @@
 
 也可以直接打开仓库里的 `docs/index.html` 与 `docs/dog.html`。
 
-## 单文件离线版
+## 下载
 
-`docs/单文件离线版/` 下是两份**把图片内联进去**的单文件 HTML（各约 4 MB），
-不依赖任何外部资源，可直接下载、打印、发给朋友：
+| 形式 | 养猫手册 | 养狗手册 | 说明 |
+|---|---|---|---|
+| 在线版 | [打开](https://nullurl.github.io/pet-handbook/) | [打开](https://nullurl.github.io/pet-handbook/dog.html) | 带侧栏目录，适合浏览器里翻 |
+| **PDF（A4 打印版）** | [下载](https://nullurl.github.io/pet-handbook/单文件离线版/养猫手册-2026增订版.pdf) · 138 页 / 11 MB | [下载](https://nullurl.github.io/pet-handbook/单文件离线版/养狗手册-2026版.pdf) · 103 页 / 10 MB | 排版按 A4 重排，图表不跨页，页脚带页码，可直接打印或装订 |
+| 单文件 HTML | [下载](https://nullurl.github.io/pet-handbook/单文件离线版/养猫手册-2026增订版.html) · 4.8 MB | [下载](https://nullurl.github.io/pet-handbook/单文件离线版/养狗手册-2026版.html) · 4.1 MB | 图片已内联，一个文件带走，双击即开、不用联网 |
 
-- [养猫手册-2026增订版.html](https://nullurl.github.io/pet-handbook/单文件离线版/养猫手册-2026增订版.html)（4.8 MB）
-- [养狗手册-2026版.html](https://nullurl.github.io/pet-handbook/单文件离线版/养狗手册-2026版.html)（4.1 MB）
+> 单文件版与 PDF 都能离线使用；在线版依赖 `docs/assets/` 里的图片。
 
-也可以从仓库里直接下载原始文件，或用 `curl -O` 抓取上面的直链。
+## 自媒体图卡素材
+
+[**打开图卡素材墙 →**](https://nullurl.github.io/pet-handbook/cards.html)
+
+从两本手册正文里挑出适合传播的内容，做成 **24 张 1080×1440（3:4）的 PNG**，
+可直接用于公众号 / 小红书 / 朋友圈。每张图上的文字都是手册原文，未另写文案，
+图上带来源标注与仓库地址。内容涵盖：新手高频问题、猫狗身体语言、疫苗程序、
+驱虫频率、呕吐要不要就医、食物黑名单、中暑处置、绝育月龄、购物清单、首年费用等。
 
 ## 内容结构
 
@@ -65,23 +74,34 @@
 ├── docs/
 │   ├── index.html            养猫手册（在线版，图片外链）
 │   ├── dog.html              养狗手册（在线版，图片外链）
-│   ├── 单文件离线版/           两份把图片内联进去的单文件 HTML
+│   ├── cards.html            自媒体图卡素材墙（24 张 PNG）
+│   ├── 单文件离线版/           两本手册的 PDF（A4 打印版）与单文件 HTML（图片内联）
 │   └── assets/
 │       ├── illus/            本手册绘制的示意图
-│       └── orig/             来自内容底本原文的实拍与插画
+│       ├── orig/             来自内容底本原文的实拍与插画
+│       └── social/           自媒体图卡（1080×1440 PNG）
 ├── data/
 │   ├── 宠物医院信息表.csv
 │   └── 宠物医疗价格参考表.csv
-└── tools/hb/                 生成脚本（内容模块 + 渲染引擎 + 构建管道）
+└── tools/hb/                 生成脚本（内容模块 + 渲染引擎 + 构建管道 + PDF/图卡导出）
 ```
 
 ## 重新生成
 
 ```bash
 cd tools/hb
-python build2.py            # 重新产出 docs/index.html 与 docs/dog.html
-python build2.py report     # 只打印转换后的全部小节标题，用于人工复核
+
+python build2.py            # 1. 重新产出 手册/*.html 与 docs/index.html、docs/dog.html
+python mkrepo.py            # 2. 打包整个仓库（图片、PDF、图卡、说明文件、在线页）
+
+# 可选：重新导出 PDF 与图卡（需要本机有 Node 与 playwright）
+node mkpdf.js ../docs/index.html ../手册/养猫手册-2026增订版.pdf "养猫手册 · 2026 增订版"
+node mkpdf.js ../docs/dog.html   ../手册/养狗手册-2026版.pdf     "养狗手册 · 2026 版"
+python cards.py             # 生成 24 张卡片的 HTML
+node cardshot.js            # 截成 PNG 到 手册/素材/
 ```
+
+`mkrepo.py` 幂等：它只清理自己上次的产物，**不会动 `.git`**。
 
 内容写在 `tools/hb/cat.py`（养猫）、`tools/hb/dog.py`（养狗）里，
 是两个纯数据模块；`gen.py` 是渲染引擎，`provenance.py` 管来源与引用，

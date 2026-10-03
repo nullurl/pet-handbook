@@ -176,30 +176,64 @@ footer{padding:36px 60px; color:var(--ink3); font-size:12.5px; border-top:1px so
 .backtop{position:fixed; right:26px; bottom:26px; background:var(--brand); color:#fff; width:44px; height:44px;
   border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none;
   box-shadow:0 6px 18px rgba(192,57,43,.35); font-size:18px}
-@media print{
-  aside,.backtop{display:none} body{background:#fff}
-  .wrap{display:block; max-width:none} main{padding:0}
-  header.hero{padding:30px} .body,footer{padding:0 12px}
-  h2{page-break-after:avoid} h3{page-break-after:avoid} table{page-break-inside:avoid}
-  figure{page-break-inside:avoid; box-shadow:none}
-}
-@media (max-width:900px){
+/* 窄屏：手机上的单栏版式。必须限定 screen —— A4 打印的布局宽度只有约 794px，
+   不限 screen 的话这一组会盖掉打印规则（封面插图被隐藏、正文内边距被覆盖）。 */
+@media screen and (max-width:900px){
   aside{display:none} .body{padding:0 20px} header.hero{padding:34px 20px} footer{padding:24px 20px}
   header.hero .hero-art{display:none}
+}
+@media print{
+  /* 打印/导出 PDF：侧栏、悬浮按钮、页内跳转入口一律不印 */
+  aside,.backtop,header.hero .links,.xref,.nav-extra{display:none !important}
+  html,body{background:#fff}
+  body{-webkit-print-color-adjust:exact; print-color-adjust:exact; font-size:10.5pt; line-height:1.75}
+  .wrap{display:block; max-width:none; margin:0}
+  main{padding:0; background:#fff}
+  .body,footer{padding:0 14mm}
+  /* 封面独占首页，并纵向铺满 A4（297mm 高 − 上下页边距） */
+  header.hero{padding:0 18mm; margin:0; border-radius:0; display:flex; align-items:center;
+    box-sizing:border-box; min-height:265mm; page-break-after:always; break-after:page}
+  header.hero .hero-inner{display:flex; gap:12mm; align-items:center}
+  header.hero h1{font-size:30pt}
+  header.hero .sub{font-size:11pt}
+  header.hero .hero-art{display:block; flex:0 0 58mm}
+  header.hero .meta span{font-size:8.5pt}
+  /* 标题不与后文分离 */
+  h2,h3,h4,h5{page-break-after:avoid; break-after:avoid}
+  h2{page-break-before:auto; margin-top:14mm}
+  h3{margin-top:10mm}
+  /* 图表、提示块、引用块整体不跨页 */
+  figure,table,.note,.tip,.warn,.danger,blockquote.q,.subsec,.grid,.toc-grid .col{
+    page-break-inside:avoid; break-inside:avoid}
+  figure{box-shadow:none; margin:5mm 0}
+  figure img{width:auto; max-width:100%; max-height:205mm; margin:0 auto; display:block}
+  figure.tall{max-width:120mm}
+  table{font-size:9pt}
+  th,td{padding:5px 7px}
+  /* 目录分两栏更省页 */
+  .toc-grid{grid-template-columns:1fr 1fr; gap:6mm}
+  /* 附录锚点与角标不换行 */
+  sup.cite{white-space:nowrap}
+  a[href^="#"]{color:inherit; text-decoration:none}
+  a{color:var(--ink2)}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
-<aside><div class="brand"><b>养猫手册</b><span>2026 增订版 · 25 章 + 8 附录 · 全文来源可追溯</span></div><div class="nav-extra"><a href="dog.html">另：养狗手册（2026 版）</a><a href="单文件离线版/%E5%85%BB%E7%8C%AB%E6%89%8B%E5%86%8C-2026%E5%A2%9E%E8%AE%A2%E7%89%88.html" download>下载单文件离线版（图片内联，可离线打开）</a><a href="https://github.com/nullurl/pet-handbook" target="_blank" rel="noopener">GitHub 仓库 · 勘误与反馈</a></div><a href="#top">封面与使用说明</a><a class="sec" href="#sec0">第一部分 · 与猫共处</a><a class="ch" href="#ch1">1. 新手养猫30问</a><a class="ch" href="#ch2">2. 猫咪行为及心理解析</a><a class="ch" href="#ch3">3. 猫咪到家注意事项</a><a class="ch" href="#ch4">4. 和小猫咪互动、建立感情</a><a class="ch" href="#ch5">5. 猫咪和人类的共生历史</a><a class="sec" href="#sec1">第二部分 · 喂养</a><a class="ch" href="#ch6">6. 猫粮</a><a class="ch" href="#ch7">7. 生骨肉</a><a class="ch" href="#ch8">8. 零食</a><a class="ch" href="#ch9">9. 营养品</a><a class="sec" href="#sec2">第三部分 · 健康</a><a class="ch" href="#ch10">10. 绝育</a><a class="ch" href="#ch11">11. 驱虫</a><a class="ch" href="#ch12">12. 疫苗</a><a class="ch" href="#ch13">13. 牙结石</a><a class="ch" href="#ch14">14. 呕吐、拉稀、挠伤</a><a class="sec" href="#sec3">第四部分 · 购物清单</a><a class="ch" href="#ch15">15. 铲屎官购物清单</a><a class="ch" href="#ch16">16. 猫舍家长专属清单</a><a class="ch" href="#ch17">17. 养猫进阶好物</a><a class="sec" href="#sec4">第五部分 · 常见提问</a><a class="ch" href="#ch18">18. 怎么给猫咪剪指甲？</a><a class="ch" href="#ch19">19. 夏天要给猫咪开空调么？</a><a class="ch" href="#ch20">20. 猫咪出远门：宠物托运</a><a class="ch" href="#ch21">21. 猫粮碗怎么选？</a><a class="ch" href="#ch22">22. 如何给猫咪拍出漂亮照片</a><a class="ch" href="#ch23">23. 猫咪掉毛多怎么办？</a><a class="ch" href="#ch24">24. 有猫家庭里，不能养的植物</a><a class="ch" href="#ch25">25. 拓展阅读：行为学、病理学</a><a class="sec" href="#app">附录</a><a class="ch" href="#apA">附录A · 权威知识库速查（默沙东 / WSAVA / AAHA / CVMA / 国标）</a><a class="ch" href="#apB">附录B · 全国宠物医院信息（24 小时急诊 · 价格 · 评价参考）</a><a class="ch" href="#apC">附录C · 危险食物、毒物与植物清单（含中毒剂量）</a><a class="ch" href="#apD">附录D · 急诊速查卡（红旗信号 · 生命体征 · 出门清单）</a><a class="ch" href="#apE">附录E · 核对与勘误表（2026-10-01 逐条回查）</a><a class="ch" href="#apF">附录F · 内容来源与出处对照</a><a class="ch" href="#apG">附录G · 对照与差异说明</a><a class="ch" href="#apH">附录H · 引用来源清单（References）</a></aside>
-<main><header class="hero" id="top"><div class="hero-inner"><div class="hero-txt"><div class="kicker">CAT OWNER HANDBOOK · 2026</div><h1>养猫手册</h1><div class="sub">从「我是不是该养猫」到「猫半夜吐了要不要冲医院」。25 章覆盖与猫共处、喂养、健康、购物、常见提问；所有出处集中收进附录F/G/H，正文以 [n] 上标逐条可追。</div><div class="meta"><span>25 章 + 8 附录（知识库速查 / 宠物医院 / 毒物清单 / 急诊卡 / 勘误表 / 来源对照 / 差异说明 / 引用清单）</span><span>引用来源：默沙东兽医手册、WSAVA 2024、AAHA 2024、ACVIM、CVMA 团标与指南、GB/T 与 NY/T 标准、ASPCA</span><span>正文任何数字都可在附录H 找到出处；与权威口径不一致处，逐条列在附录G</span><span>附录B：全国宠物医院 24h 急诊与价格参考</span><span>权威数据已于 2026-10-01 逐条回查核对（见附录E）</span></div><div class="links"><a href="dog.html">另：养狗手册（2026 版）</a><a href="单文件离线版/%E5%85%BB%E7%8C%AB%E6%89%8B%E5%86%8C-2026%E5%A2%9E%E8%AE%A2%E7%89%88.html" download>下载单文件离线版（图片内联，可离线打开）</a><a href="https://github.com/nullurl/pet-handbook" target="_blank" rel="noopener">GitHub 仓库 · 勘误与反馈</a></div></div><div class="hero-art"><img src="assets/illus/cat-cover.jpg" alt="封面插图"></div></div></header><div class="body"><p>这本手册把 25 章内容写成<strong>可以直接照着做</strong>的条目：每一个数字、月龄、剂量，都能在附录里找到出处；凡是权威来源之间存在分歧的地方，都单独标出来，而不是揉成一句“看情况”。</p>
+<aside><div class="brand"><b>养猫手册</b><span>2026 增订版 · 25 章 + 8 附录 · 全文来源可追溯</span></div><div class="nav-extra"><a href="dog.html">另：养狗手册（2026 版）</a><a href="单文件离线版/%E5%85%BB%E7%8C%AB%E6%89%8B%E5%86%8C-2026%E5%A2%9E%E8%AE%A2%E7%89%88.pdf" download>下载 PDF（A4 打印版）</a><a href="单文件离线版/%E5%85%BB%E7%8C%AB%E6%89%8B%E5%86%8C-2026%E5%A2%9E%E8%AE%A2%E7%89%88.html" download>下载单文件 HTML（图片内联，可离线打开）</a><a href="cards.html">图卡素材（自媒体用 · PNG）</a><a href="https://github.com/nullurl/pet-handbook" target="_blank" rel="noopener">GitHub 仓库 · 勘误与反馈</a></div><a href="#top">封面与使用说明</a><a class="sec" href="#sec0">第一部分 · 与猫共处</a><a class="ch" href="#ch1">1. 新手养猫30问</a><a class="ch" href="#ch2">2. 猫咪行为及心理解析</a><a class="ch" href="#ch3">3. 猫咪到家注意事项</a><a class="ch" href="#ch4">4. 和小猫咪互动、建立感情</a><a class="ch" href="#ch5">5. 猫咪和人类的共生历史</a><a class="sec" href="#sec1">第二部分 · 喂养</a><a class="ch" href="#ch6">6. 猫粮</a><a class="ch" href="#ch7">7. 生骨肉</a><a class="ch" href="#ch8">8. 零食</a><a class="ch" href="#ch9">9. 营养品</a><a class="sec" href="#sec2">第三部分 · 健康</a><a class="ch" href="#ch10">10. 绝育</a><a class="ch" href="#ch11">11. 驱虫</a><a class="ch" href="#ch12">12. 疫苗</a><a class="ch" href="#ch13">13. 牙结石</a><a class="ch" href="#ch14">14. 呕吐、拉稀、挠伤</a><a class="sec" href="#sec3">第四部分 · 购物清单</a><a class="ch" href="#ch15">15. 铲屎官购物清单</a><a class="ch" href="#ch16">16. 猫舍家长专属清单</a><a class="ch" href="#ch17">17. 养猫进阶好物</a><a class="sec" href="#sec4">第五部分 · 常见提问</a><a class="ch" href="#ch18">18. 怎么给猫咪剪指甲？</a><a class="ch" href="#ch19">19. 夏天要给猫咪开空调么？</a><a class="ch" href="#ch20">20. 猫咪出远门：宠物托运</a><a class="ch" href="#ch21">21. 猫粮碗怎么选？</a><a class="ch" href="#ch22">22. 如何给猫咪拍出漂亮照片</a><a class="ch" href="#ch23">23. 猫咪掉毛多怎么办？</a><a class="ch" href="#ch24">24. 有猫家庭里，不能养的植物</a><a class="ch" href="#ch25">25. 拓展阅读：行为学、病理学</a><a class="sec" href="#app">附录</a><a class="ch" href="#apA">附录A · 权威知识库速查（默沙东 / WSAVA / AAHA / CVMA / 国标）</a><a class="ch" href="#apB">附录B · 全国宠物医院信息（24 小时急诊 · 价格 · 评价参考）</a><a class="ch" href="#apC">附录C · 危险食物、毒物与植物清单（含中毒剂量）</a><a class="ch" href="#apD">附录D · 急诊速查卡（红旗信号 · 生命体征 · 出门清单）</a><a class="ch" href="#apE">附录E · 核对与勘误表（2026-10-01 逐条回查）</a><a class="ch" href="#apF">附录F · 内容来源与出处对照</a><a class="ch" href="#apG">附录G · 对照与差异说明</a><a class="ch" href="#apH">附录H · 引用来源清单（References）</a></aside>
+<main><header class="hero" id="top"><div class="hero-inner"><div class="hero-txt"><div class="kicker">CAT OWNER HANDBOOK · 2026</div><h1>养猫手册</h1><div class="sub">从「我是不是该养猫」到「猫半夜吐了要不要冲医院」。25 章覆盖与猫共处、喂养、健康、购物、常见提问；所有出处集中收进附录F/G/H，正文以 [n] 上标逐条可追。</div><div class="meta"><span>25 章 + 8 附录（知识库速查 / 宠物医院 / 毒物清单 / 急诊卡 / 勘误表 / 来源对照 / 差异说明 / 引用清单）</span><span>引用来源：默沙东兽医手册、WSAVA 2024、AAHA 2024、ACVIM、CVMA 团标与指南、GB/T 与 NY/T 标准、ASPCA</span><span>正文任何数字都可在附录H 找到出处；与权威口径不一致处，逐条列在附录G</span><span>附录B：全国宠物医院 24h 急诊与价格参考</span><span>权威数据已于 2026-10-01 逐条回查核对（见附录E）</span></div><div class="links"><a href="dog.html">另：养狗手册（2026 版）</a><a href="单文件离线版/%E5%85%BB%E7%8C%AB%E6%89%8B%E5%86%8C-2026%E5%A2%9E%E8%AE%A2%E7%89%88.pdf" download>下载 PDF（A4 打印版）</a><a href="单文件离线版/%E5%85%BB%E7%8C%AB%E6%89%8B%E5%86%8C-2026%E5%A2%9E%E8%AE%A2%E7%89%88.html" download>下载单文件 HTML（图片内联，可离线打开）</a><a href="cards.html">图卡素材（自媒体用 · PNG）</a><a href="https://github.com/nullurl/pet-handbook" target="_blank" rel="noopener">GitHub 仓库 · 勘误与反馈</a></div></div><div class="hero-art"><img src="assets/illus/cat-cover.jpg" alt="封面插图"></div></div></header><div class="body"><h2>关于这本手册</h2>
+<p>这本手册把 25 章内容写成<strong>可以直接照着做</strong>的条目：每一个数字、月龄、剂量，都能在附录里找到出处；凡是权威来源之间存在分歧的地方，都单独标出来，而不是揉成一句“看情况”。</p>
 <p>全书分五个部分——<strong>与猫共处、喂养、健康、购物清单、常见提问</strong>，覆盖从「我是不是该养猫」到「猫半夜吐了要不要冲医院」。</p>
 <div class="note">💡 <strong>来源是怎么标</strong>：正文不再分成“底本”和“补充”两轨，读下来就是一本完整的手册；所有出处集中收进三个附录——<strong>附录F</strong> 逐章列出内容来源，<strong>附录G</strong> 逐条列出与权威口径的差异说明，<strong>附录H</strong> 是完整的引用来源清单。正文里凡出现 [n] 上标之处，点击即跳到附录H 对应条目。</div>
+<h2>关于配图</h2>
 <p>全书 <strong>25 张配图</strong>，分两类：一类来自内容底本公众号原文里的实拍与手绘插图，一类是本手册为无图章节补绘的示意图。两类图在版式上<strong>不作区分</strong>，统一以「配图」标注，图注里说明这张图想表达的那个判断。</p>
 <div class="note">💡 <strong>为什么会有两类图</strong>：底本中有几篇（尤其购物清单类）通篇是电商商品截图，直接放进手册会变成广告。因此原则是——原文有合适的实拍或插画就用原图，只有商品截图的地方改用手绘示意。目的只有一个：让每一张图都对得起读者花的时间。</div>
+<h2>使用前先看这三条</h2>
 <div class="danger">🚨 <strong>一、兽医面诊 &gt; 指南共识 &gt; 本手册。</strong> 本手册不能替代诊断。文中给的剂量、月龄、频率都是“人群层面的共识”，落到你家这只猫身上，请听主治兽医的。</div>
 <div class="danger">🚨 <strong>二、急诊不等天亮。</strong> 猫是“忍痛大师”，等它表现出明显痛苦时，往往已经病得不轻。出现附录D 里列的任何一种情况，直接去医院。</div>
 <div class="danger">🚨 <strong>三、别信偏方。</strong> 人用药（尤其对乙酰氨基酚、布洛芬）、各种“网红神药”、“纯天然精油”，对猫的伤害远大于好处。猫的肝脏代谢通路与人差异巨大。</div>
+<h2>全书速览</h2>
 <div class="grid"><div class="card"><h5>如果你刚接猫回家</h5><p>先读第 1、3 章，把家改造成“猫安全区”，再谈感情</p><p>预约首次体检，带上免疫本</p></div><div class="card"><h5>如果你在纠结吃什么</h5><p>第 6 章定主食框架，第 7 章看生骨肉的风险，第 8、9 章管零食和营养品</p><p>把钱花在主食上，别花在补剂上</p></div><div class="card"><h5>如果你怕它生病</h5><p>第 10–14 章是硬功夫：绝育、驱虫、疫苗、牙齿、日常症状</p><p>重点背下附录D 的急诊红旗</p></div><div class="card"><h5>如果你只想抄清单</h5><p>直接跳第 15 章“铲屎官购物清单”</p><p>避坑项都在表里标了出来</p></div></div><h2 id="toc">目录</h2><div class="toc-grid"><div class="col"><h5>第一部分 · 与猫共处</h5><a href="#ch1"><i>1</i>新手养猫30问</a><a href="#ch2"><i>2</i>猫咪行为及心理解析</a><a href="#ch3"><i>3</i>猫咪到家注意事项</a><a href="#ch4"><i>4</i>和小猫咪互动、建立感情</a><a href="#ch5"><i>5</i>猫咪和人类的共生历史</a></div><div class="col"><h5>第二部分 · 喂养</h5><a href="#ch6"><i>6</i>猫粮</a><a href="#ch7"><i>7</i>生骨肉</a><a href="#ch8"><i>8</i>零食</a><a href="#ch9"><i>9</i>营养品</a></div><div class="col"><h5>第三部分 · 健康</h5><a href="#ch10"><i>10</i>绝育</a><a href="#ch11"><i>11</i>驱虫</a><a href="#ch12"><i>12</i>疫苗</a><a href="#ch13"><i>13</i>牙结石</a><a href="#ch14"><i>14</i>呕吐、拉稀、挠伤</a></div><div class="col"><h5>第四部分 · 购物清单</h5><a href="#ch15"><i>15</i>铲屎官购物清单</a><a href="#ch16"><i>16</i>猫舍家长专属清单</a><a href="#ch17"><i>17</i>养猫进阶好物</a></div><div class="col"><h5>第五部分 · 常见提问</h5><a href="#ch18"><i>18</i>怎么给猫咪剪指甲？</a><a href="#ch19"><i>19</i>夏天要给猫咪开空调么？</a><a href="#ch20"><i>20</i>猫咪出远门：宠物托运</a><a href="#ch21"><i>21</i>猫粮碗怎么选？</a><a href="#ch22"><i>22</i>如何给猫咪拍出漂亮照片</a><a href="#ch23"><i>23</i>猫咪掉毛多怎么办？</a><a href="#ch24"><i>24</i>有猫家庭里，不能养的植物</a><a href="#ch25"><i>25</i>拓展阅读：行为学、病理学</a></div></div><h2 id="sec0">第一部分 · 与猫共处</h2><p>养猫前 90% 的纠结，都在这五章里。</p><h3 id="ch1"><span class="no">1</span>新手养猫30问</h3><figure class="tall"><img src="assets/orig/src-cat30.jpg" alt="**《新手养猫30问》篇插图**（Q16「出门几天，猫咪在家可不可以」与「要封窗吗」两问）。用的是统一的手绘猫形象，一问" loading="lazy"><figcaption><em>配图</em><strong>《新手养猫30问》篇插图</strong>（Q16「出门几天，猫咪在家可不可以」与「要封窗吗」两问）。用的是统一的手绘猫形象，一问一图。这一篇的 30 问，本手册在下面做了<strong>权威口径校核</strong>——凡是说得太绝对、或与兽医共识不一致的地方，都在对照表里标了出来。</figcaption></figure>
 <p>把新手最常问的问题压成一张决策表。先看结论，再看理由。</p>
 <h4>1. 我适合养猫吗？</h4>

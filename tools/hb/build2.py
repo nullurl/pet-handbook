@@ -417,15 +417,19 @@ def build_one(mod, kind, out_path, img_mode, img_prefix, diffs, nfig):
         if kind == 'cat':
             meta['links'] = [
                 ('另：养狗手册（2026 版）', 'dog.html'),
-                ('下载单文件离线版（图片内联，可离线打开）',
+                ('下载 PDF（A4 打印版）', '单文件离线版/' + quote('养猫手册-2026增订版.pdf'), ' download'),
+                ('下载单文件 HTML（图片内联，可离线打开）',
                  '单文件离线版/' + quote('养猫手册-2026增订版.html'), ' download'),
+                ('图卡素材（自媒体用 · PNG）', 'cards.html'),
                 ('GitHub 仓库 · 勘误与反馈', REPO_URL),
             ]
         else:
             meta['links'] = [
                 ('另：养猫手册（2026 增订版）', './'),
-                ('下载单文件离线版（图片内联，可离线打开）',
+                ('下载 PDF（A4 打印版）', '单文件离线版/' + quote('养狗手册-2026版.pdf'), ' download'),
+                ('下载单文件 HTML（图片内联，可离线打开）',
                  '单文件离线版/' + quote('养狗手册-2026版.html'), ' download'),
+                ('图卡素材（自媒体用 · PNG）', 'cards.html'),
                 ('GitHub 仓库 · 勘误与反馈', REPO_URL),
             ]
 

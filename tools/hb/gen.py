@@ -229,16 +229,46 @@ footer{padding:36px 60px; color:var(--ink3); font-size:12.5px; border-top:1px so
 .backtop{position:fixed; right:26px; bottom:26px; background:var(--brand); color:#fff; width:44px; height:44px;
   border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none;
   box-shadow:0 6px 18px rgba(192,57,43,.35); font-size:18px}
-@media print{
-  aside,.backtop{display:none} body{background:#fff}
-  .wrap{display:block; max-width:none} main{padding:0}
-  header.hero{padding:30px} .body,footer{padding:0 12px}
-  h2{page-break-after:avoid} h3{page-break-after:avoid} table{page-break-inside:avoid}
-  figure{page-break-inside:avoid; box-shadow:none}
-}
-@media (max-width:900px){
+/* 窄屏：手机上的单栏版式。必须限定 screen —— A4 打印的布局宽度只有约 794px，
+   不限 screen 的话这一组会盖掉打印规则（封面插图被隐藏、正文内边距被覆盖）。 */
+@media screen and (max-width:900px){
   aside{display:none} .body{padding:0 20px} header.hero{padding:34px 20px} footer{padding:24px 20px}
   header.hero .hero-art{display:none}
+}
+@media print{
+  /* 打印/导出 PDF：侧栏、悬浮按钮、页内跳转入口一律不印 */
+  aside,.backtop,header.hero .links,.xref,.nav-extra{display:none !important}
+  html,body{background:#fff}
+  body{-webkit-print-color-adjust:exact; print-color-adjust:exact; font-size:10.5pt; line-height:1.75}
+  .wrap{display:block; max-width:none; margin:0}
+  main{padding:0; background:#fff}
+  .body,footer{padding:0 14mm}
+  /* 封面独占首页，并纵向铺满 A4（297mm 高 − 上下页边距） */
+  header.hero{padding:0 18mm; margin:0; border-radius:0; display:flex; align-items:center;
+    box-sizing:border-box; min-height:265mm; page-break-after:always; break-after:page}
+  header.hero .hero-inner{display:flex; gap:12mm; align-items:center}
+  header.hero h1{font-size:30pt}
+  header.hero .sub{font-size:11pt}
+  header.hero .hero-art{display:block; flex:0 0 58mm}
+  header.hero .meta span{font-size:8.5pt}
+  /* 标题不与后文分离 */
+  h2,h3,h4,h5{page-break-after:avoid; break-after:avoid}
+  h2{page-break-before:auto; margin-top:14mm}
+  h3{margin-top:10mm}
+  /* 图表、提示块、引用块整体不跨页 */
+  figure,table,.note,.tip,.warn,.danger,blockquote.q,.subsec,.grid,.toc-grid .col{
+    page-break-inside:avoid; break-inside:avoid}
+  figure{box-shadow:none; margin:5mm 0}
+  figure img{width:auto; max-width:100%; max-height:205mm; margin:0 auto; display:block}
+  figure.tall{max-width:120mm}
+  table{font-size:9pt}
+  th,td{padding:5px 7px}
+  /* 目录分两栏更省页 */
+  .toc-grid{grid-template-columns:1fr 1fr; gap:6mm}
+  /* 附录锚点与角标不换行 */
+  sup.cite{white-space:nowrap}
+  a[href^="#"]{color:inherit; text-decoration:none}
+  a{color:var(--ink2)}
 }
 """
 
@@ -306,7 +336,12 @@ def render_blocks(blocks):
     out = []
     for b in blocks:
         k = b[0]
-        if k == 'h3':
+        if k == 'h2':
+            # ('h2', '标题'[, 'anchor'])。此前缺这个分支，卷首语里的小标题
+            # 一直被静默丢掉——网页版和 PDF 都少了「关于这本手册」等标题。
+            aid = f' id="{b[2]}"' if len(b) > 2 and b[2] else ''
+            out.append(f'<h2{aid}>{inline(b[1], cite_ok=False)}</h2>')
+        elif k == 'h3':
             out.append(f'<h3 id="{b[2] if len(b) > 2 else ""}">{b[1]}</h3>')
         elif k == 'h4':
             out.append(f'<h4>{inline(b[1], cite_ok=False)}</h4>')
